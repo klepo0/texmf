@@ -1,0 +1,112 @@
+\NeedsTeXFormat{LaTeX2e}
+
+%Package to simplify loading of newtxtext with newtxmath for all latex engines
+\def\fileversion{1.702}
+\def\filedate{2021/12/27}
+\ProvidesPackage{newtx}[%
+\filedate\space v\fileversion (Michael Sharpe) latex and unicode latex support for newtxtext with newtxmath]
+
+\message{`newtx'v\fileversion,\filedate\space Integrated\space loading\space of\space newtxtext\space and\space newtxmath
+\space for\space all\space latex\space engines\space (msharpe)}
+\RequirePackage{ifthen,ifxetex,ifluatex}
+
+\def\ntx@mathlst{vecsep,amsthm,nosubscriptcorrection,subscriptcorrection,subscriptcorrectionfile,timesmathacc,varbb,vvarbb,nosymbolsc,noamssymbols,amssymbols,uprightscript,uprightGreek,slantedGreek,frenchmath,nonewtxmathopt,upint,smallerops,useBImacros,varg,varvw,noOT1}
+\def\ntx@textlst{type1,nofontspec,no-math,defaultfeatures,lining,lf,oldstyle,osf,tabular,t,proportional,p,defaultsups,largesc,nott,nohelv,helvratio,spcfactor,spacing,stretch,shrink,defaultfeatures,oldSS,slashedzero,theoremfont,thmlining,trueslanted,scosf,tighter,looser}
+
+%\newif\ifntx@inmath\newif\ifntx@intext
+%% #2
+%\def\ntx@inmath#1{\ntx@inmathfalse%
+%  \@for\ntx@opt:=\ntx@mathlst\do{%
+%  \ifthenelse{\equal}{#1}{\ntx@opt}{\ntx@inmathtrue\typeout{#1 in mathlst}}{}}%
+%  }
+%\def\ntx@intext#1{\ntx@intextfalse%
+%  \@for\ntx@opt:=\ntx@textlst\do{%
+%  \ifthenelse{\equal}{#1}{\ntx@opt}{\ntx@intexttrue}{}}%
+%  }
+
+%Enginecheck
+\newif\ifntxotf
+\newif\ifntx@origotf
+\ifxetex
+  \ntxotftrue
+\else
+  \ifluatex
+    \ntxotftrue
+  \else %[pdf]LaTeX
+    \ntxotffalse
+  \fi
+\fi
+\ifntxotf\ntx@origotftrue\fi
+
+%%%%%%%%%%%%%%%%%%
+\IfFileExists{xkeyval.sty}{\RequirePackage{xkeyval}}%
+{\let\DeclareOptionX\DeclareOption
+\let\ExecuteOptionsX\ExecuteOptions
+\let\ProcessOptionsX\ProcessOptions}
+%%%%StartOptions
+\newif\ifntxotfmath\ntxotfmathfalse %default is type1 math
+%\newif\ifntxotftext\ntxotftexttrue %default is otftext using newtxtext
+%\newcommand{\ntx@optlist}{}
+
+%\DeclareOptionX{type1text}[true]{%
+%\@nameuse{if#1}\ntxotftextfalse\fi
+%}
+%\DeclareOptionX{nofontspec}[true]{%
+%\@nameuse{if#1}\ntxotffalse\fi
+%}
+%\DeclareOptionX{type1}[true]{%
+%\@nameuse{if#1}\ntxotffalse\fi
+%}
+\DeclareOptionX{otfmath}[true]{%
+\@nameuse{if#1}\ntxotfmathtrue\typeout{Got otfmath}\fi
+}
+  
+\DeclareOptionX*{% what to do with unknown options
+%\ntx@intext{\CurrentOption}\ifntx@intext%
+\PassOptionsToPackage{\CurrentOption}{newtxtext}
+%\ntx@inmath{\CurrentOption}\ifntx@inmath%
+\PassOptionsToPackage{\CurrentOption}{newtxmath}
+}
+
+\ProcessOptionsX\relax 
+
+\ifntxotf\typeout{otf^^J}\else\typeout{type1^^J}\fi
+\ifntxotfmath\typeout{otfmath^^J}\else\typeout{type1math^^J}\fi
+%\ifntxotftext\typeout{otftext^^J}\else\typeout{type1text^^J}\fi
+
+\ifntxotf
+% \ifntxotftext
+  \ifntxotfmath %I
+    \usepackage[]{newtxtext} %may not load fontspec
+    \RequirePackage{fontspec} % just in case
+    \usepackage{unicode-math} %loads amsmath
+    %\setmathfont{}
+  \else %II: type1 math, otftext
+    \renewcommand{\rmdefault}{ntxtlf} % Roman and BoldTermes for math
+    \usepackage[]{newtxmath} % options will be as passed from newtx
+    \usepackage[no-math]{newtxtext}
+    \RequirePackage[no-math]{fontspec} % just in case 
+  \fi
+% \else % type1 text
+%  \ifntxotfmath %II: type1text, otfmath
+%    \usepackage[]{newtxtext}
+%    \usepackage{fontspec}
+%    \usepackage{unicode-math} % loadsamsmath
+%    %\setmathfont{}
+%  \else %IV: type1math,type1text
+%    \renewcommand{\rmdefault}{ntxtlf}% Roman and Bold Termes for math
+%    \usepackage[]{newtxmath}% options will be as passed from newtx
+%    \usepackage[nofontspec]{newtxtext}
+%    \ifntx@origotf\usepackage[no-math]{fontspec}\fi % we are
+%  \fi
+% \fi
+\else % pdflatex
+  \renewcommand{\rmdefault}{ntxtlf}% Roman and Bold Termes for math
+  \usepackage{newtxmath} % options will be as passed from newtx
+  \usepackage{newtxtext} % should load tt and sans math before newtx
+\fi
+%\usepackage[\ntx@optlist]{newtxtext}%optionswillalsobeaspassedfromnewtx
+%\ifntxotfmath
+%\usepackage{unicode-math}
+%\fi
+\endinput
