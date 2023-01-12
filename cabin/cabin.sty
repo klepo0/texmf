@@ -1,8 +1,9 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{cabin}
-    [2020/07/18 (Bob Tennent)  Supports Cabin fonts for all LaTeX engines.]
+    [2022/12/24 (Bob Tennent)  Supports Cabin fonts for all LaTeX engines.]
 
 \RequirePackage{ifxetex,ifluatex,xkeyval,textcomp}
+
 
 \newif\ifcabin@otf 
 \ifxetex
@@ -12,6 +13,12 @@
 \else  % [pdf]LaTeX
   \cabin@otffalse
 \fi\fi
+
+\ifcabin@otf
+  \RequirePackage{fontspec}
+\else
+  \RequirePackage{fontenc,fontaxes,mweights}
+\fi
 
 \newif\ifcabin@default \cabin@defaultfalse
 \newif\ifcabin@lining \cabin@liningfalse
@@ -59,14 +66,9 @@
   \fi
 \fi
 
-\ifcabin@otf
-  \RequirePackage{fontspec}
-\else
-  \RequirePackage{fontenc,fontaxes,mweights}
-\fi
+
 
 \ifcabin@otf
-  \ifxetex\XeTeXtracingfonts=1\fi
   \defaultfontfeatures{
         Ligatures = TeX ,
         Scale     = \Cabin@scale ,
@@ -113,8 +115,9 @@
     \ifcabin@medium\def\mdseries@sf{mediumcondensed}\fi
     \mdseries
   }
-  \def\sfdefault{\cabinfamily}
-  \ifcabin@default\edef\familydefault{\sfdefault}\edef\seriesdefault{\mdseries@sf}\fi
+  \edef\sfdefault{\cabinfamily}
+  \ifcabin@default\edef\familydefault{\cabinfamily}\edef\seriesdefault{\mdseries@sf}\fi
+
 \fi
 
 \ifcabin@otf

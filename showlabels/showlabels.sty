@@ -8,7 +8,7 @@
 %% Showlabels: Style to display labels in the margin
 %% This is the showlabels package
 %%
-%%%% Copyright 1999, 2001-09, 2013-21, Norman Gray
+%%%% Copyright 1999, 2001-09, 2013-22, Norman Gray
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public Licence, either version 1.3c
@@ -26,11 +26,11 @@
 %% and the derived file showlabels.sty.
 
 %%%% File: showlabels.dtx
-%%%% Source: 1f8b1fcbe557, 2021-10-27T16:06:03+01:00
+%%%% Source: dc6d682fadbc, 2022-07-18T23:32:32+01:00
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{showlabels}[2021/10/27\space v1.9.1]
-\typeout{Package: `showlabels' v1.9.1\space<2021/10/27>}
+\ProvidesPackage{showlabels}[2022/07/18\space v1.9.2]
+\typeout{Package: `showlabels' v1.9.2\space<2022/07/18>}
 \newif\ifSL@AMS
 \@ifundefined{maketag@@@}
   \SL@AMSfalse
@@ -177,21 +177,23 @@
 \def\SL@interlinetext#1{%
   \setbox\@tempboxa=\hbox{\showlabelsetlabel{\SL@prlabelname{#1}}}\dp\@tempboxa\z@
   \ifvmode
+    \@tempdima=\prevdepth
     \nointerlineskip\vbox to 0pt{\vss
-      \hbox to \columnwidth{\hss \box\@tempboxa}}%
+      \hbox to \hsize{\hss \box\@tempboxa}}\nobreak
+    \prevdepth=\@tempdima
   \else
     \ifSL@setleft
       \hbox to 0pt{%
-  \hss
-  \vbox to 0pt{\vss
-    \hbox to 0pt{\hss\box\@tempboxa}%
-    \showlabelrefline
+        \hss
+        \vbox to 0pt{\vss
+          \hbox to 0pt{\hss\box\@tempboxa}%
+          \showlabelrefline
         }}%
     \else
       \hbox to 0pt{%
-  \vbox to 0pt{\vss
-    \box\@tempboxa
-    \showlabelrefline
+        \vbox to 0pt{\vss
+          \box\@tempboxa
+          \showlabelrefline
         }\hss}%
     \fi
     \penalty10000
@@ -247,7 +249,7 @@
   \SL@next}
 \def\SL@eqnrighttext#1{\rlap{\quad\SL@margintext{#1}}}
 \def\SL@eqnlefttext #1{\hbox to 0pt{\kern -\columnwidth
-\llap{\SL@margintext{#1}\quad}\hss}}
+        \llap{\SL@margintext{#1}\quad}\hss}}
 \def\SL@eqnalternatetext{%
   \SL@setLR
   \ifSL@setleft
@@ -290,6 +292,7 @@
   \@tempa
 }
 \def\showlabelsinline{\SL@labelsinlinetrue}
+\def\showlabelsmarginal{\SL@labelsinlinefalse}
 \newif\ifSL@labellabel
 \SL@labellabeltrue
 \DeclareOption{nolabel}{\SL@labellabelfalse}

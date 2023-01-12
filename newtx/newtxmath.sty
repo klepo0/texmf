@@ -11,8 +11,8 @@
 % of glyph collisions.
 % These modifications are by Michael Sharpe, msharpe at ucsd dot edu
 
-\def\fileversion{1.7}
-\def\filedate{2021/12/18}
+\def\fileversion{1.71}
+\def\filedate{2022/01/16}
 \ProvidesPackage{newtxmath}[\filedate\space v\fileversion ]
 \@ifundefined{newtxmathLoaded}{}{\endinput}
 
@@ -51,6 +51,7 @@
 \define@key{ntxmath}{scale}[1.0]{\def\tx@scale{#1}\def\ntxmath@scaled{s*[#1]}}
 \def\ntxmath@vecsep{.25ex}
 \define@key{ntxmath}{vecsep}[.25ex]{\def\ntxmath@vecsep{#1}}
+%:
 %\define@key{ntxmath}{scalesubdrop}[1.0]{\DeclareRobustCommand{\ntx@scalesub}{%
 %\fontdimen16\font=#1\fontdimen16\font\fontdimen17\font=#1\fontdimen17\font}}
 \DeclareOption*{%
@@ -94,15 +95,15 @@
 \newif\iftx@fourier 
 \edef\tx@rmdefault{\rmdefault}
 \edef\tx@encdefault{\encodingdefault}
-\tx@ottrue % default is true
+\tx@ottrue % default is to use OT1 operators
 \let\rmdefaultB\rmdefault
 \newif\iftx@hastm  
 \ifx\tx@rmdefault\@tx@ptm \tx@hastmtrue\fi
 \@ifundefined{ver@newtxtext.sty}{}{\tx@hastmtrue}
 \@ifundefined{ver@tgtermes.sty}{}{\tx@hastmtrue}
-\iftx@hastm\def\rmdefaultB{ntxtlf}\fi
+\iftx@hastm\def\rmdefaultB{minntx}\fi
 % test if tm is loaded minimally as with XeLaTeX newtxmath
-\ifthenelse{\equal{\rmdefault}{ntxtlf}}{\tx@hastmtrue\def\rmdefaultB{ntxtlf}}{}
+\ifthenelse{\equal{\rmdefault}{minntx}}{\tx@hastmtrue\def\rmdefaultB{minntx}}{}
 %\expandafter\ifx\csname qnc@scale\endcsname\relax
 %\else
 %    \let\znc@scale=\qnc@scale % scale set by tgschola.sty
@@ -135,8 +136,8 @@
              \if\next N\mkern-0.5mu\else
               \if\next P\mkern-\@ne mu\else
                \if\next X\mkern-\@ne mu\else
-                \ifx\next \rho\mkern-1.5mu\else
-                 \ifx\next \mu\mkern-1 mu\else
+                \if\next \rho\mkern-1.5mu\else
+                 \if\next \mu\mkern-1 mu\else
                  \fi
                 \fi
                \fi%
@@ -191,14 +192,14 @@
   \repeat
 }
 \def\tx@addrec#1#2{%
-\ifiscseq{#1}{\tx@tA\expandafter{\the\tx@tA\ifx}}{\tx@tA\expandafter{\the\tx@tA\if}}
+\ifiscseq{#1}{\tx@tA\expandafter{\the\tx@tA\if}}{\tx@tA\expandafter{\the\tx@tA\if}}
 \tx@tA\expandafter{\the\tx@tA\next #1\mkern #2 mu\else}
 \tx@tB\expandafter{\the\tx@tB\fi}}
 
 \newif\iftx@subsfile
-\@ifpackageloaded{newtx}%
-{\@for\ntx@x:=\ntx@textlst\do{\DeclareOption{\ntx@x}{}}}{}
-\DeclareOption{subscriptcorrectionfile}{\def\tx@subs{##1}\tx@subsfiletrue}
+%\@ifpackageloaded{newtx}%
+%{\@for\ntx@x:=\ntx@textlst\do{\DeclareOption{\ntx@x}{}}}{}
+\DeclareOption{subscriptcorrectionfile}{\def\tx@subs{#1}\tx@subsfiletrue}
 \DeclareOption{nosubscriptcorrection}{\tx@sbcfalse}
 \DeclareOption{subscriptcorrection}{\tx@sbctrue}
 %\DeclareOption{nosuperscriptcorrection}{\disablespcorrection}
@@ -263,6 +264,8 @@
 \ExecuteOptions{%
 amssymbols,uprightGreek,nosubscriptcorrection}
 \ProcessOptions\relax
+
+\let\ntxmath@scale\tx@scale
 
 \ifntx@amsthm
   \RequirePackage{amsthm}

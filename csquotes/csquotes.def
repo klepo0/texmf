@@ -1,5 +1,5 @@
 \ProvidesFile{csquotes.def}
-  [2021-02-22 v5.2l csquotes generic definitions (JAW)]
+  [2022-09-14 v5.2n csquotes generic definitions (JAW)]
 
 % Set defaults
 
@@ -176,6 +176,12 @@
   [0.025em]
   {\textquotedblleft}
   {\textquotedblright}
+\DeclareQuoteStyle{japanese}
+  {「}
+  {」}
+  [0pt]
+  {『}
+  {』}
 \DeclareQuoteStyle{latvian}
   {\quotedblbase}
   {\textquotedblright}
@@ -249,6 +255,18 @@
   [0.05em]
   {\textquoteright}
   {\textquoteright}
+\DeclareQuoteStyle[guillemets]{slovenian}%
+  {\guillemotright}
+  {\guillemotleft}
+  [0.025em]
+  {\guilsinglright}
+  {\guilsinglleft}
+\DeclareQuoteStyle[quotes]{slovenian}%
+  {\quotedblbase}
+  {\textquotedblleft}
+  [0.05em]
+  {\quotesinglbase}
+  {\fixligatures\textquoteleft}
 \DeclareQuoteStyle[mexican]{spanish}
   {\textquotedblleft}
   {\textquotedblright}
@@ -287,6 +305,23 @@
   [0.025em]
   {\guilsinglright}
   {\guilsinglleft}
+\DeclareQuoteStyle[quotes]{turkish}
+  {\textquotedblleft}
+  {\textquotedblright}
+  [0.05em]
+  {\textquoteleft}
+  {\textquoteright}
+\DeclareQuoteStyle[guillemets]{turkish}
+  {\guillemotleft}
+  {\guillemotright}
+  [0.025em]
+  {\guilsinglleft}
+  {\guilsinglright}
+\DeclareQuoteStyle{ukrainian}
+  {\guillemotleft}
+  {\guillemotright}
+  {\quotedblbase}
+  {\textquotedblleft}
 
 % Plain style for PDF strings
 
@@ -319,6 +354,7 @@
 \DeclareQuoteAlias[brazilian]{portuguese}{brazilian}
 \DeclareQuoteAlias[portuguese]{portuguese}{portuguese}
 \DeclareQuoteAlias[quotes]{serbian}{serbian}
+\DeclareQuoteAlias[guillemets]{slovenian}{slovenian}
 \DeclareQuoteAlias[mexican]{spanish}{mexican}
 \DeclareQuoteAlias[spanish]{spanish}{spanish}
 \DeclareQuoteAlias[quotes]{swedish}{swedish}
@@ -344,10 +380,12 @@
 \DeclareQuoteAlias{norwegian}{nynorsk}
 \DeclareQuoteAlias{portuguese}{portuges}
 \DeclareQuoteAlias{serbian}{serbianc}
+\DeclareQuoteAlias{slovenian}{slovene}
 
 % Language options
 
 \DeclareQuoteOption{austrian}
+\DeclareQuoteOption{croatian}
 \DeclareQuoteOption{czech}
 \DeclareQuoteOption{danish}
 \DeclareQuoteOption{english}
@@ -356,11 +394,13 @@
 \DeclareQuoteOption{german}
 \DeclareQuoteOption{icelandic}
 \DeclareQuoteOption{italian}
+\DeclareQuoteOption{japanese}
 \DeclareQuoteOption{latin}
 \DeclareQuoteOption{latvian}
 \DeclareQuoteOption{norwegian}
 \DeclareQuoteOption{polish}
 \DeclareQuoteOption{portuguese}
+\DeclareQuoteOption{slovenian}
 \DeclareQuoteOption{spanish}
 \DeclareQuoteOption{swedish}
 
@@ -520,6 +560,10 @@
 \DeclareQuoteGlyph{TU}{"201F}% = comma quot. mark, double reversed       = n/a
 \DeclareQuoteGlyph{TU}{"2039}% = angle quot. mark, left-pointing single  = \guilsinglleft
 \DeclareQuoteGlyph{TU}{"203A}% = angle quot. mark, right-pointing single = \guilsinglright
+\DeclareQuoteGlyph{TU}{"300C}% = LEFT CORNER BRACKET                     = n/a
+\DeclareQuoteGlyph{TU}{"300D}% = RIGHT CORNER BRACKET                    = n/a
+\DeclareQuoteGlyph{TU}{"300E}% = LEFT WHITE CORNER BRACKET               = n/a
+\DeclareQuoteGlyph{TU}{"300F}% = RIGHT WHITE CORNER BRACKET              = n/a
 
 
 \endinput

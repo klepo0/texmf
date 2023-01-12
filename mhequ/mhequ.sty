@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% mhequ.sty v1.71, Copyright 2022 by Martin Hairer
+% mhequ.sty v1.72, Copyright 2022 by Martin Hairer
 %   This package is public domain. You are strongly encouraged to use
 %   it and to distribute it further. If you have some contribution to
 %	it, please let me know!
@@ -84,8 +84,20 @@
 \newif\if@MHtag
 \newif\if@MHleft
 \newif\if@MHflush
+\newif\if@MHglobals
 \@MHnumberallfalse
+\@MHglobalstrue
 
+\def\@MHsaveglobals{%
+\if@MHglobals
+\global\let\MHglobal@label=\label
+\global\let\MHglobal@ref=\ref
+\global\let\MHglobal@multicol=\multicol
+\global\let\MHglobal@notag=\notag
+\global\let\MHglobal@text\text
+\global\let\MHsavecr=\\
+\@MHglobalsfalse\fi
+}
 
 \ProcessOptions
 
@@ -101,7 +113,7 @@
 \def\@MHresetlab{\if@MHnumberall\global\@MHhaslabtrue\else\global\@MHhaslabfalse\fi}
 \@MHresetlab
 
-\def\@MHref#1{\@ifundefined{r@#1}{??}{\@saveref{#1}}}
+\def\@MHref#1{\@ifundefined{r@#1}{??}{\MHglobal@ref{#1}}}
 %%%%% Computes the length of its argument
 \newcount\@MHLength
 \def\computelength#1{\@MHLength=0 \getlength#1\end}
@@ -113,7 +125,7 @@
 		{}\string\setcounter{lab@#1}{0}}%
 	\global\expandafter\let\expandafter\c@MHCurrentCount\csname c@lab@#1\endcsname%
 	\global\@namedef{MHused@#1}{}%
-	\def\@currentlabel{\theequation}\MHsavelabel{#1}%
+	\def\@currentlabel{\theequation}\MHglobal@label{#1}%
 	}
 \def\@uselabel#1{\global\def\@mylabel{#1}
 	\global\expandafter\let\expandafter\c@MHCurrentCount\csname c@lab@#1\endcsname
@@ -153,7 +165,7 @@
 
 \def\@MHwritelabel{\def\@currentlabel{\@MHeqno}%
 	\if@MHleft\kern\displaywidth\kern0.2truecm\else\kern0.2cm\fi%
-	\MHsavelabel{\@MHcurrentlabel}%
+	\MHglobal@label{\@MHcurrentlabel}%
 	\if@MHleft\kern-\displaywidth\kern-0.2truecm\else\kern-0.2cm\fi}
 
 \def\@MHstep{\if@MHtag\else\if@MHuseminilab\stepcounter{MHCurrentCount}%
@@ -166,18 +178,18 @@
 
 \def\@MHnotag{\@MHhaslabfalse}
 
-\def\@saveMHComms{\@restoretag\let\MHsavecr=\\\let\\=\@MHcr\let\@saveref=\ref\let\ref=\@MHref%
-	\let\MHsavelabel=\label\let\label=\@MHlabel\let\@MHsavemult\multicol\let\@MHsavetag\notag\let\notag\@MHnotag%
-	\let\multicol\@MHspan\let\@MHsavetext\text\let\text\hbox\let\@MHsaveequation\theequation\let\theequation\@MHequation}
-\def\@restoreMHComms{\let\\=\MHsavecr\let\label=\MHsavelabel\@MHreset\let\ref=\@saveref%
-	\let\multicol\@MHsavemult\let\notag\@MHsavetag\let\text\@MHsavetext\let\theequation\@MHsaveequation\global\def\@MHequation{\@MHsaveequation}}
+\def\@saveMHComms{\@MHsaveglobals\@restoretag\let\\=\@MHcr\let\ref=\@MHref%
+	\let\label=\@MHlabel\let\notag\@MHnotag%
+	\let\multicol\@MHspan\let\text\hbox}
+\def\@restoreMHComms{\let\\=\MHsavecr\let\label=\MHglobal@label\@MHreset\let\ref=\MHglobal@ref%
+	\let\multicol\MHglobal@multicol\let\notag\MHglobal@notag\let\text\MHglobal@text}
 
 
 
-\def\@minilab#1{\let\MHsavelabel=\label%
+\def\@minilab#1{%
 	\@MHUseLab{#1}\@ifundefined{MHused@#1}%
 	{\@makelabel{#1}}{\@uselabel{#1}}%
-	\let\label=\MHsavelabel\egroup\global\@ignoretrue}
+	\let\label=\MHglobal@label\egroup\global\@ignoretrue}
 \def\minilab{\bgroup\MH@changecodes\@minilab}
 \def\@MHequation{\@MHsaveequation}
 

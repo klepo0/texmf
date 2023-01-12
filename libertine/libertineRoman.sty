@@ -1,5 +1,5 @@
 \ProvidesPackage{libertineRoman}[%
- 2020/03/26  (Bob Tennent) Supports Libertine Roman fonts for all LaTeX engines.] 
+ 2022/09/12  (Bob Tennent) Supports Libertine Roman fonts for all LaTeX engines.] 
 
 \RequirePackage{ifxetex,ifluatex,xkeyval,textcomp}
 
@@ -150,7 +150,6 @@
 \iflibertine@otf
 
   \def\libertine@base{LinLibertine}
-  \ifxetex\XeTeXtracingfonts=1\fi
   \defaultfontfeatures{
      Ligatures = TeX ,
      Extension = .otf ,

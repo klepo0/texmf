@@ -13,7 +13,7 @@
 %% conditions of the LaTeX Project Public License, either version 1.3
 %% of this license or (at your option) any later version.
 %% The latest version of this license is in
-%%   http://www.latex-project.org/lppl.txt
+%%   https://www.latex-project.org/lppl.txt
 %% and version 1.3 or later is part of all distributions of LaTeX
 %% version 2005/12/01 or later.
 %%
@@ -29,11 +29,10 @@
 %%
 %% See the file LICENCE for a copy of the LPPL.
 %%
-%% Mercurial ident: c834991c867a (1.10+1), 2020-09-26 17:44 +0100
+%% Mercurial ident: 1.10.1 (@VCSINFO)
 %%
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{textpos}[2020/09/26 v1.10]
-\typeout{Package: textpos 2020/09/26 1.10, absolute positioning of text on the page}
+\ProvidesPackage{textpos}[2022/07/23 v1.10.1]
  
 \newif\ifTPshowboxes
 \TPshowboxesfalse
@@ -59,21 +58,21 @@
 \newif\ifTP@Liii
 \@ifl@t@r\fmtversion{2020/10/01}\TP@Liiitrue\TP@Liiifalse
 \PackageInfo{textpos}{choosing support for \ifTP@Liii LaTeX3\else LaTeX2e\fi}
-\ifTP@Liii
-  % avoid everyshi package
-\else
+\ifTP@Liii\else
   \ifTP@abspos
     \RequirePackage{everyshi}
   \fi
 \fi
 \RequirePackage{keyval}
 \define@key{tp}{absolute}{\csname TP@abspos#1\endcsname}
-\define@key{tp}{overlay}{\csname TP@overlay#1\endcsname}
+\define@key{tp}{overlay}{\PackageWarning{textpos}{The overlay option
+    to TPoptions is not implemented and has been ignored}}
 \define@key{tp}{verbose}{\csname TP@chatter#1\endcsname}
 \define@key{tp}{showboxes}{\csname TPshowboxes#1\endcsname}
 \define@key{tp}{showtext}{\csname TP@showtext#1\endcsname}
-\define@key{tp}{discardcontent}{\csname @tempswa#1\endcsname
-   \if@tempswa\TP@displayholdboxfalse\else\TP@displayholdboxtrue\fi}
+\define@key{tp}{discardcontent}{%
+  \csname @tempswa#1\endcsname
+  \if@tempswa\TP@displayholdboxfalse\else\TP@displayholdboxtrue\fi}
 \def\TPoptions{\setkeys{tp}}
 \def\TP@xfloat#1[#2]{
   \par\def\@captype{#1}%
@@ -208,14 +207,20 @@
 \let\textblockrulecolor\textblockrulecolour
 \let\tekstblokroolkulur\textblockrulecolour
 \gdef\TP@color[#1]#2{}
-\def\TP@checkdummycolorpackage{%
-  \@ifundefined{color}%
+\def\TP@dummycolorpackage{
+  \@ifundefined{color}
     {\globaldefs=1
-       \DeclareRobustCommand\color[2][]{}%
-       \def\color@block##1##2##3{}%
-     \globaldefs=0 }{}%
-  \global\let\TP@checkdummycolorpackage\relax % don't come here again
+       \DeclareRobustCommand\color[2][]{}
+       \def\color@block##1##2##3{}
+     \globaldefs=0 }
+    {}
 }
+\ifTP@Liii
+  \AddToHook{env/document/before}{\TP@dummycolorpackage}
+  \AddToHook{file/color.sty/after}{\let\TP@dummycolorpackage\relax}
+\else
+  \AtBeginDocument{\TP@dummycolorpackage}
+\fi
 \def\TP@referenceposition{0,0}
 \def\TPReferencePosition#1{\def\TP@referenceposition{#1}}
 \def\textblock#1{%
@@ -251,7 +256,6 @@
   \let\@xympar\TP@xympar
   \setbox\TP@textbox=\vbox\bgroup
     \ifTPshowboxes
-      \TP@checkdummycolorpackage
       {\color{\TP@rulecolour}\hrule height0pt depth \TPboxrulesize }%
       \vskip-\TPboxrulesize
     \fi
@@ -322,8 +326,7 @@
   \setbox0=\vbox to 0pt{\vskip\@tempdimb
     \hbox to 0pt{\hskip\@tempdima
     \ifx\TP@blockcolour\@empty \else
-      {\TP@checkdummycolorpackage
-       \color{\TP@blockcolour}%
+      {\color{\TP@blockcolour}%
        \color@block{\wd\TP@textbox}{\ht\TP@textbox}{\dp\TP@textbox}%
       }%
     \fi
@@ -408,9 +411,9 @@
         }%
       \fi}%
     \fi
-  \fi
+  \fi % ifTP@Liii
   \textblockorigin{0pt}{0pt}%
-\fi
+\fi % ifTP@abspos
 \endinput
 %%
 %% End of file `textpos.sty'.

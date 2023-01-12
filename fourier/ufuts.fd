@@ -1,11 +1,11 @@
 %Filename: ufuts.fd
-%Created by: tex build-fourier
-%Created using fontinst v1.926
+%Created by: tex build-only-ornaments
+%Created using fontinst v1.933
 
 %THIS FILE SHOULD BE PUT IN A TEX INPUTS DIRECTORY
 
 \ProvidesFile{ufuts.fd}
-   [2004/03/02 Fontinst v1.926 font definitions for U/futs.]
+   [2021/11/24 Fontinst v1.933 font definitions for U/futs.]
 
 \DeclareFontFamily{U}{futs}{}
 
